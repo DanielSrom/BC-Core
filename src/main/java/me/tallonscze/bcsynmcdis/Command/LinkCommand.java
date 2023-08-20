@@ -4,14 +4,11 @@ package me.tallonscze.bcsynmcdis.Command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import me.tallonscze.bcsynmcdis.Chrom;
 import me.tallonscze.bcsynmcdis.Bcsynmcdis;
-import net.minecraft.commands.CommandSource;
+import me.tallonscze.bcsynmcdis.Chrom;
+import me.tallonscze.bcsynmcdis.Vote.VoteEvent;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ComponentArgument;
-import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -21,10 +18,13 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Bcsynmcdis.MODID)
 public class LinkCommand {
 
+    private VoteEvent voteEvent;
+
     private Chrom lchrom;
 
     public LinkCommand(){
         lchrom = Bcsynmcdis.chrom;
+        voteEvent = Bcsynmcdis.voteEvent;
     }
 
     public void register(CommandDispatcher<CommandSourceStack> dispatcher){
@@ -46,17 +46,29 @@ public class LinkCommand {
                         .executes(context -> {
                             String playerGameName = StringArgumentType.getString(context, "playerName");
 
+                            voteEvent.setVotePoint(playerGameName);
 
                             return Command.SINGLE_SUCCESS;
                         })));
+
         dispatcher.register(Commands.literal("reward")
                 .requires(cs -> cs.hasPermission(1))
                 .then(Commands.literal("claim")
                         .executes(context -> {
+                            String playerName = context.getSource().getPlayerOrException().getName().getString();
+                            int point = voteEvent.getVotePoint(playerName);
+                            voteEvent.resetVotingPoint(playerName);
+
+                            //Zde bude příkaz, který přidá hráči odměnu * počet pointů
+
                             return Command.SINGLE_SUCCESS;
                         }))
                 .then(Commands.literal("get")
                         .executes(context -> {
+                            String playerName = context.getSource().getPlayerOrException().getName().getString();
+                            int point = voteEvent.getVotePoint(playerName);
+                            context.getSource().sendSystemMessage(Component.literal("Právě máš: " + point + " vote pointů."));
+
                             return Command.SINGLE_SUCCESS;
                         }))
 
