@@ -49,13 +49,19 @@ public class LinkCommand {
 
                             return Command.SINGLE_SUCCESS;
                         })));
-        dispatcher.register(Commands.literal("getreward")
+        dispatcher.register(Commands.literal("reward")
                 .requires(cs -> cs.hasPermission(1))
-                .executes(context -> {
+                .then(Commands.literal("claim")
+                        .executes(context -> {
+                            return Command.SINGLE_SUCCESS;
+                        }))
+                .then(Commands.literal("get")
+                        .executes(context -> {
+                            return Command.SINGLE_SUCCESS;
+                        }))
 
+                );
 
-                    return Command.SINGLE_SUCCESS;
-                }));
     }
 
     @SubscribeEvent
