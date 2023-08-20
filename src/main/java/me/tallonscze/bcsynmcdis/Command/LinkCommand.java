@@ -52,15 +52,18 @@ public class LinkCommand {
                         })));
 
         dispatcher.register(Commands.literal("reward")
-                .requires(cs -> cs.hasPermission(1))
+                //.requires(cs -> cs.hasPermission(0))
                 .then(Commands.literal("claim")
                         .executes(context -> {
                             String playerName = context.getSource().getPlayerOrException().getName().getString();
                             int point = voteEvent.getVotePoint(playerName);
+                            if (point == 0){
+                                context.getSource().getPlayerOrException().sendSystemMessage(Component.literal("[BurningCube] Nemáš žádné votepointy."));
+                                return Command.SINGLE_SUCCESS;
+                            }
                             voteEvent.resetVotingPoint(playerName);
-
-                            //Zde bude příkaz, který přidá hráči odměnu * počet pointů
-
+                            context.getSource().getPlayerOrException().sendSystemMessage(Component.literal("Vybral jsi: " + point + " vote pointů."));
+                            voteEvent.giveItemToPlayer(context.getSource().getPlayerOrException(), point);
                             return Command.SINGLE_SUCCESS;
                         }))
                 .then(Commands.literal("get")

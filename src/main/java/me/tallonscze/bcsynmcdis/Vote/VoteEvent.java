@@ -2,6 +2,10 @@ package me.tallonscze.bcsynmcdis.Vote;
 
 
 import com.zaxxer.hikari.HikariDataSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,6 +39,7 @@ public class VoteEvent {
                     .prepareStatement("SELECT `value` FROM `voting_modpack` WHERE `minecraft_name` = ?");
             preparedStatement.setString(1, name);
             preparedStatement.execute();
+            preparedStatement.getResultSet().next();
             return preparedStatement.getResultSet().getInt("value");
         }catch (Exception e){
             e.printStackTrace();
@@ -89,12 +94,22 @@ public class VoteEvent {
             } else {
                 PreparedStatement insertStatement = connection
                         .prepareStatement("UPDATE `voting_modpack` SET `value` = 0 WHERE `minecraft_name` = ?");
-                preparedStatement.setString(1, name);
-                preparedStatement.execute();
+                insertStatement.setString(1, name);
+                insertStatement.execute();
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    public void giveItemToPlayer(Player player, int point){
+        ItemStack itemStack = new ItemStack(Items.DIAMOND, point);
+        Inventory inventory = player.getInventory();
+
+        if (!inventory.add(itemStack.copy())){
+            player.drop(itemStack, false);
+        }
+    }
+
 
 }

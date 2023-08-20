@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ModEvent {
     private MinecraftServer server;
     private int tickCounter = 0;
-    private final int SAVE_INTERVAL = 60 * 20;
+    private final int SAVE_INTERVAL = 600 * 20;
     private Chrom lchrom;
     public ModEvent(){
         lchrom = Bcsynmcdis.chrom;
@@ -32,7 +32,7 @@ public class ModEvent {
         if (server.isSingleplayer() || user == null){
             return;
         }
-        if (server.getPlayerCount() >= (server.getMaxPlayers())-5){
+        if (server.getPlayerCount() >= (server.getMaxPlayers())-4){
             if(!user.getCachedData().getPermissionData().checkPermission("vipslot.primaryconnect").asBoolean()){
                 Connection connec = player.connection.getConnection();
                 Component disconnectReson = Component.literal("Server je plný.. Zakup si VIP pro rezervovaný slot.");
