@@ -13,14 +13,14 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Bcsynmcdis.MODID)
+@Mod.EventBusSubscriber(modid = BCCore.MODID)
 public class ModEvent {
     private MinecraftServer server;
     private int tickCounter = 0;
     private final int SAVE_INTERVAL = 600 * 20;
-    private Chrom lchrom;
+    private ChromCode lchrom;
     public ModEvent(){
-        lchrom = Bcsynmcdis.chrom;
+        lchrom = BCCore.chrom;
     }
 
     @SubscribeEvent

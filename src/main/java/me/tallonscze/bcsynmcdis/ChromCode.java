@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Chrom {
+public class ChromCode {
     private final HikariDataSource hikariDataSource;
-    public Chrom(String host, int port, String database, String username, String password) {
+    public ChromCode(String host, int port, String database, String username, String password) {
 
 
         String finalUrl = "jdbc:mariadb://" + host + ":" + port + "/" + database;

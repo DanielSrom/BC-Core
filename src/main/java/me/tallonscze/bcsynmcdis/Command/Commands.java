@@ -4,33 +4,32 @@ package me.tallonscze.bcsynmcdis.Command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import me.tallonscze.bcsynmcdis.Bcsynmcdis;
-import me.tallonscze.bcsynmcdis.Chrom;
+import me.tallonscze.bcsynmcdis.BCCore;
+import me.tallonscze.bcsynmcdis.ChromCode;
 import me.tallonscze.bcsynmcdis.Vote.VoteEvent;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Bcsynmcdis.MODID)
-public class LinkCommand {
+@Mod.EventBusSubscriber(modid = BCCore.MODID)
+public class Commands {
 
     private VoteEvent voteEvent;
 
-    private Chrom lchrom;
+    private ChromCode lchrom;
 
-    public LinkCommand(){
-        lchrom = Bcsynmcdis.chrom;
-        voteEvent = Bcsynmcdis.voteEvent;
+    public Commands(){
+        lchrom = BCCore.chrom;
+        voteEvent = BCCore.voteEvent;
     }
 
     public void register(CommandDispatcher<CommandSourceStack> dispatcher){
-        dispatcher.register(Commands.literal("link")
+        dispatcher.register(net.minecraft.commands.Commands.literal("link")
                 .requires(cs -> cs.hasPermission(0))
-                .then(Commands.argument("discordName", StringArgumentType.string())
+                .then(net.minecraft.commands.Commands.argument("discordName", StringArgumentType.string())
                         .executes(context -> {
                             context.getSource().sendSuccess(Component.literal("Success"), true);
                             String discordNameString = StringArgumentType.getString(context, "discordName").replace("-", "#");
@@ -40,9 +39,9 @@ public class LinkCommand {
                             context.getSource().sendSuccess(Component.literal(discordNameString + " " + playrName), true);
                             return Command.SINGLE_SUCCESS;
                         })));
-        dispatcher.register(Commands.literal("addvote")
+        dispatcher.register(net.minecraft.commands.Commands.literal("addvote")
                 .requires(cs -> cs.hasPermission(4))
-                .then(Commands.argument("playerName", StringArgumentType.word())
+                .then(net.minecraft.commands.Commands.argument("playerName", StringArgumentType.word())
                         .executes(context -> {
                             String playerGameName = StringArgumentType.getString(context, "playerName");
 
@@ -51,9 +50,9 @@ public class LinkCommand {
                             return Command.SINGLE_SUCCESS;
                         })));
 
-        dispatcher.register(Commands.literal("reward")
+        dispatcher.register(net.minecraft.commands.Commands.literal("reward")
                 //.requires(cs -> cs.hasPermission(0))
-                .then(Commands.literal("claim")
+                .then(net.minecraft.commands.Commands.literal("claim")
                         .executes(context -> {
                             String playerName = context.getSource().getPlayerOrException().getName().getString();
                             int point = voteEvent.getVotePoint(playerName);
@@ -66,7 +65,7 @@ public class LinkCommand {
                             voteEvent.giveItemToPlayer(context.getSource().getPlayerOrException(), point);
                             return Command.SINGLE_SUCCESS;
                         }))
-                .then(Commands.literal("get")
+                .then(net.minecraft.commands.Commands.literal("get")
                         .executes(context -> {
                             String playerName = context.getSource().getPlayerOrException().getName().getString();
                             int point = voteEvent.getVotePoint(playerName);
