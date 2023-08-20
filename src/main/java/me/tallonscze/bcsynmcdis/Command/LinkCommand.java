@@ -50,7 +50,7 @@ public class LinkCommand {
                             return Command.SINGLE_SUCCESS;
                         })));
         dispatcher.register(Commands.literal("getreward")
-                .requires(cs -> cs.hasPermission(0))
+                .requires(cs -> cs.hasPermission(1))
                 .executes(context -> {
 
 
