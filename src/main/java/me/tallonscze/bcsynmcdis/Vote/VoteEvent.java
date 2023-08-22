@@ -2,6 +2,7 @@ package me.tallonscze.bcsynmcdis.Vote;
 
 
 import com.zaxxer.hikari.HikariDataSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -102,13 +103,19 @@ public class VoteEvent {
         }
     }
 
-    public void giveItemToPlayer(Player player, int point){
+    public int giveItemToPlayer(Player player, int point){
         ItemStack itemStack = new ItemStack(Items.DIAMOND, point);
+        //ItemStack test = new ItemStack(Items.BurningCube, point);
         Inventory inventory = player.getInventory();
 
-        if (!inventory.add(itemStack.copy())){
-            player.drop(itemStack, false);
+        if (inventory.isEmpty()){
+            inventory.add(itemStack.copy());
+            return 1;
+        }else{
+            player.sendSystemMessage(Component.literal("Tvůj Inventář je plný."));
+            return 2;
         }
+
     }
 
 

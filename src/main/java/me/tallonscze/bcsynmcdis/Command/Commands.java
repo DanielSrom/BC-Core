@@ -60,9 +60,13 @@ public class Commands {
                                 context.getSource().getPlayerOrException().sendSystemMessage(Component.literal("[BurningCube] Nemáš žádné votepointy."));
                                 return Command.SINGLE_SUCCESS;
                             }
-                            voteEvent.resetVotingPoint(playerName);
-                            context.getSource().getPlayerOrException().sendSystemMessage(Component.literal("Vybral jsi: " + point + " vote pointů."));
-                            voteEvent.giveItemToPlayer(context.getSource().getPlayerOrException(), point);
+                            int help = voteEvent.giveItemToPlayer(context.getSource().getPlayerOrException(), point);
+                            if (help == 1){
+                                voteEvent.resetVotingPoint(playerName);
+                                context.getSource().getPlayerOrException().sendSystemMessage(Component.literal("Vybral jsi: " + point + " vote pointů."));
+                            } else {
+                                return Command.SINGLE_SUCCESS;
+                            }
                             return Command.SINGLE_SUCCESS;
                         }))
                 .then(net.minecraft.commands.Commands.literal("get")
