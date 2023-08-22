@@ -3,10 +3,17 @@ package me.tallonscze.bcsynmcdis.Vote;
 
 import com.zaxxer.hikari.HikariDataSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.client.model.CompositeModel;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoader;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -104,8 +111,11 @@ public class VoteEvent {
     }
 
     public int giveItemToPlayer(Player player, int point){
-        ItemStack itemStack = new ItemStack(Items.DIAMOND, point);
-        //ItemStack test = new ItemStack(Items.BurningCube, point);
+        Item burningCubeCoin = getBurningCubeCoin();
+        if (burningCubeCoin == null){
+            return 2;
+        }
+        ItemStack itemStack = new ItemStack(burningCubeCoin, point);
         Inventory inventory = player.getInventory();
 
         if (inventory.isEmpty()){
@@ -116,6 +126,22 @@ public class VoteEvent {
             return 2;
         }
 
+    }
+
+    public Item getBurningCubeCoin(){
+        if (ModList.get().isLoaded("kubejs")){
+            try{
+                ResourceLocation itemLocation = new ResourceLocation("kubejs:burningcube_coin");
+                Item coin = ForgeRegistries.ITEMS.getValue(itemLocation);
+                return coin;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else{
+            return null;
+        }
+        return null;
     }
 
 
