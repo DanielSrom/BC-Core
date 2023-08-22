@@ -2,17 +2,12 @@ package me.tallonscze.bcsynmcdis.Vote;
 
 
 import com.zaxxer.hikari.HikariDataSource;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.client.model.CompositeModel;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.sql.Connection;
@@ -118,14 +113,11 @@ public class VoteEvent {
         ItemStack itemStack = new ItemStack(burningCubeCoin, point);
         Inventory inventory = player.getInventory();
 
-        if (inventory.isEmpty()){
-            inventory.add(itemStack.copy());
+        if (!inventory.add(itemStack.copy())){
+            player.drop(itemStack, false);
             return 1;
-        }else{
-            player.sendSystemMessage(Component.literal("Tvůj Inventář je plný."));
-            return 2;
         }
-
+        return 1;
     }
 
     public Item getBurningCubeCoin(){
