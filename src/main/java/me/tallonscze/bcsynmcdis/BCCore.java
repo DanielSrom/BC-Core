@@ -2,6 +2,8 @@ package me.tallonscze.bcsynmcdis;
 
 import com.mojang.logging.LogUtils;
 import me.tallonscze.bcsynmcdis.Command.Commands;
+import me.tallonscze.bcsynmcdis.NameFormat.NameFormatEvent;
+import me.tallonscze.bcsynmcdis.SyncRank.SynRanks;
 import me.tallonscze.bcsynmcdis.Vote.VoteEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,6 +21,7 @@ public class BCCore {
     public static VoteEvent voteEvent;
     public static ChromCode chrom;
 
+
     public BCCore() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -29,6 +32,8 @@ public class BCCore {
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new ModEvent());
         MinecraftForge.EVENT_BUS.register(new Commands());
+        MinecraftForge.EVENT_BUS.register(new NameFormatEvent());
+        MinecraftForge.EVENT_BUS.register(new SynRanks());
     }
 
 }

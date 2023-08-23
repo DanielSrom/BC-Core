@@ -32,6 +32,22 @@ public class VoteEvent {
 
     }
 
+    public int getTotalVotePoint(String name){
+        try (Connection connection = hikariDataSource.getConnection()){
+            if(name == null){
+                return 0;
+            }
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("SELECT `value` FROM `voting_modpack` WHERE `minecraft_name` = ?");
+            preparedStatement.setString(1, name);
+            preparedStatement.execute();
+            preparedStatement.getResultSet().next();
+            return preparedStatement.getResultSet().getInt("total_value");
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
     public int getVotePoint(String name){
         try (Connection connection = hikariDataSource.getConnection()){
@@ -67,10 +83,11 @@ public class VoteEvent {
                         .prepareStatement("INSERT INTO `voting_modpack` (`minecraft_name`, `value`) VALUES (?, ?)");
                 insertStatement.setString(1, name);
                 insertStatement.setInt(2, 1);
+                insertStatement.setInt(3, 1);
                 insertStatement.execute();
             } else {
                 PreparedStatement insertStatement = connection
-                        .prepareStatement("UPDATE `voting_modpack` SET `value` = `value` + 1 WHERE `minecraft_name` = ?");
+                        .prepareStatement("UPDATE `voting_modpack` SET `value` = `value` + 1, `total_value` = `total_value` + 1 WHERE `minecraft_name` = ?");
                 insertStatement.setString(1, name);
                 insertStatement.execute();
             }

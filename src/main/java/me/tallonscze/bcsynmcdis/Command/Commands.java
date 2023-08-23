@@ -69,11 +69,13 @@ public class Commands {
                             }
                             return Command.SINGLE_SUCCESS;
                         }))
-                .then(net.minecraft.commands.Commands.literal("get")
+                .then(net.minecraft.commands.Commands.literal("view")
                         .executes(context -> {
                             String playerName = context.getSource().getPlayerOrException().getName().getString();
                             int point = voteEvent.getVotePoint(playerName);
+                            int tPoint = voteEvent.getTotalVotePoint(playerName);
                             context.getSource().sendSystemMessage(Component.literal("Právě máš: " + point + " vote pointů."));
+                            context.getSource().sendSystemMessage(Component.literal("Celkem máš: " + tPoint + "vote pointů."));
 
                             return Command.SINGLE_SUCCESS;
                         }))
