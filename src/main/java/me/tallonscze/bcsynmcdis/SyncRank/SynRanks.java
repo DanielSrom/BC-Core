@@ -2,8 +2,13 @@ package me.tallonscze.bcsynmcdis.SyncRank;
 
 import com.mojang.logging.LogUtils;
 import dev.ftb.mods.ftbranks.api.Rank;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -20,6 +25,8 @@ public class SynRanks {
     LuckPerms myLuckAPI = new LuckPerms();
 
     private int tickCounter = 0;
+
+
 
 
 
@@ -41,7 +48,7 @@ public class SynRanks {
                 }
                 List<Rank> playerRanks = myFtbRanksAPI.getPlayerRanks(player);
                 String rankLP = myLuckAPI.getRank(player);
-                if (rankLP.equals("vip") || rankLP.equals("vip+") || rankLP.equals("elite")){
+                if (rankLP.equals("bronze") || rankLP.equals("osmium") || rankLP.equals("uranium")){
                     for (Rank rank : playerRanks){
                         myFtbRanksAPI.removeRankFromPlayer(player, rank);
                     }
@@ -50,6 +57,9 @@ public class SynRanks {
                 } else if (playerRanks.contains(myFtbRanksAPI.getRank("senior"))){
 
                     for (Rank rank : playerRanks){
+                        if (rank == myFtbRanksAPI.getRank("team")){
+                            continue;
+                        }
                         myFtbRanksAPI.removeRankFromPlayer(player, rank);
                     }
                     myLuckAPI.setRank(player, "senior");
@@ -57,13 +67,19 @@ public class SynRanks {
                 }  else if (playerRanks.contains(myFtbRanksAPI.getRank("mediator"))){
 
                     for (Rank rank : playerRanks){
+                        if (rank == myFtbRanksAPI.getRank("team")){
+                            continue;
+                        }
                         myFtbRanksAPI.removeRankFromPlayer(player, rank);
                     }
                     myLuckAPI.setRank(player, "mediator");
 
                 }
-                else if (rankLP.equals("default")){
+                else if (rankLP.equals("Player")){
                     for (Rank rank : playerRanks){
+                        if (rank == myFtbRanksAPI.getRank("team")){
+                            continue;
+                        }
                         myFtbRanksAPI.removeRankFromPlayer(player, rank);
                     }
                     myFtbRanksAPI.setRankToPlayer(player, myFtbRanksAPI.getRank("member"));
@@ -80,6 +96,8 @@ public class SynRanks {
 
     }
 
+
+
     @SubscribeEvent
     public void onServerStarded(ServerStartingEvent event){
         server = event.getServer();
@@ -91,7 +109,7 @@ public class SynRanks {
             tickCounter++;
 
             //Interval set to 1 Minutes
-            int SAVE_INTERVAL = 60 * 20;
+            int SAVE_INTERVAL = 300 * 20;
             if (tickCounter >= SAVE_INTERVAL) {
                 tickCounter = 0;
                 synchronizedRanks();

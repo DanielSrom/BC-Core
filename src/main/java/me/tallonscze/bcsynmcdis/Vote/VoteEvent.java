@@ -38,7 +38,7 @@ public class VoteEvent {
                 return 0;
             }
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT `value` FROM `voting_modpack` WHERE `minecraft_name` = ?");
+                    .prepareStatement("SELECT `total_value` FROM `voting_modpack` WHERE `minecraft_name` = ?");
             preparedStatement.setString(1, name);
             preparedStatement.execute();
             preparedStatement.getResultSet().next();
@@ -80,7 +80,7 @@ public class VoteEvent {
 
             if (rowCount == 0){
                 PreparedStatement insertStatement = connection
-                        .prepareStatement("INSERT INTO `voting_modpack` (`minecraft_name`, `value`) VALUES (?, ?)");
+                        .prepareStatement("INSERT INTO `voting_modpack` (`minecraft_name`, `value`, `total_value`) VALUES (?, ?, ?)");
                 insertStatement.setString(1, name);
                 insertStatement.setInt(2, 1);
                 insertStatement.setInt(3, 1);

@@ -6,7 +6,7 @@ import net.luckperms.api.node.Node;
 import net.minecraft.server.level.ServerPlayer;
 
 public class LuckPerms {
-    public User getUser(ServerPlayer player){
+    public static User getUser(ServerPlayer player){
         return LuckPermsProvider.get().getUserManager().getUser(player.getUUID());
     }
 

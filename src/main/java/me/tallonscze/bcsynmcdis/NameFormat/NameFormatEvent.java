@@ -1,5 +1,6 @@
 package me.tallonscze.bcsynmcdis.NameFormat;
 
+import me.tallonscze.bcsynmcdis.SyncRank.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,14 @@ public class NameFormatEvent {
         ServerPlayer player = event.getPlayer();
         player.refreshTabListName();
         player.refreshDisplayName();
+        User user = LuckPerms.getUser(player);
+
+        if(user.getCachedData().getPermissionData().checkPermission("bc.muted").asBoolean()){
+            event.setCanceled(true);
+        }
+        if(user.getCachedData().getPermissionData().checkPermission("bc.colorchat").asBoolean()){
+            event.setMessage(Component.literal(event.getMessage().getString().replace("&", "§")));
+        }
     }
 
     @SubscribeEvent
@@ -46,7 +55,7 @@ public class NameFormatEvent {
             ServerPlayer sPlayer = (ServerPlayer) event.getEntity();
 
             Component header = Component.literal(" \n §4§lBurning§f§lCube Network \n ");
-            Component footer = Component.literal(" \n §eDiscord §f- brcb.eu/discord\n §eWeb §f- docs.burningcube.eu \n §eStore §f- store.burningcube.eu\n");
+            Component footer = Component.literal(" \n §eDiscord §f- brcb.eu/discord\n §eWeb §f- burningcube.eu \n §eStore §f- store.burningcube.eu\n");
             sPlayer.setTabListHeaderFooter(header, footer);
             updateTabName(sPlayer);
         } catch (Exception e) {
